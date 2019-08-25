@@ -1,0 +1,56 @@
+<div class="content-wrapper">
+    <div class="container-fluid">
+      <div class="row mb-1" style="margin-bottom: 10px; margin-top: 10px;">
+        <div class="col-sm-12">
+          <button routerLink="/usuario/novo-usuario" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Novo usuário</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title"> <strong>Usuários</strong> </h3>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="table-responsive">
+                <app-loading-inner innerText="Carregando dados..."></app-loading-inner>
+                <table class="table no-margin" *ngIf="lista.length > 0">
+                  <thead>
+                    <tr>
+                      <th class="text-center"><i class="fa fa-picture-o"></i></th>
+                      <th>Name</th>
+                      <th>E-mail</th>
+                      <th class="text-center">Active</th>
+                      <th class="text-center">Profile</th>
+                      <th class="text-center"><i class="fa fa-pencil"></i></th>
+                      <th class="text-center"><i class="fa fa-trash"></i></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of lista">
+                      <td class="text-center"><img [src]="convertPhoto(user.foto)" [alt]="user.name" style="height: 48px;cursor: pointer;" /></td>
+                      <td>{{ user.name }}</td>
+                      <td>{{ user.email }}</td>
+                      <td class="text-center"><img [src]="convertAtivo(user.ativo)" [alt]="user.name" /></td>
+                      <td class="text-center">{{ convertProfile(user.perfil) }}</td>
+                      <td class="text-center">
+                        <button [routerLink]="['/usuario/editar', user.user_id]" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Editar</button>
+                      </td>
+                      <td class="text-center">
+                        <button (click)="excluir(user.user_id, user.name)" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.table-responsive -->
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+    </div>
+  </div>

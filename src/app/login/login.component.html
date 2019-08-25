@@ -1,0 +1,36 @@
+<!-- Main content -->
+<section class="content">
+  <div class="row">
+    <!-- left column -->
+    <div class="col-sm-4 col-sm-offset-4">
+      <div class="center-block">
+        <!-- general form elements -->
+        <div class="box box-primary">
+          <div class="box-header with-border">
+            <h3 class="box-title">Login de acesso</h3>
+          </div>
+          <!-- /.box-header -->
+          <!-- form start -->
+          <form role="form" #f="ngForm" (ngSubmit)="onSubmit()">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="exampleInputEmail1">E-mail</label>
+                <input type="email" class="form-control" [(ngModel)]="usuario.email" name="email" placeholder="E-mail" required>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Senha</label>
+                <input type="password" class="form-control" [(ngModel)]="usuario.password" name="password" placeholder="Senha" required>
+              </div>
+            </div>
+            <!-- /.box-body -->
+
+            <div class="box-footer">
+              <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.box -->
+      </div>
+    </div>
+  </div>
+</section>

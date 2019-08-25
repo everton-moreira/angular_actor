@@ -1,0 +1,19 @@
+.loading-inner {
+    display: inline-block;
+    width: 100%;
+    text-align: center !important;
+}
+
+.loading-inner thead tr td h3 {
+    text-align: center !important;
+}
+
+.stopped1 {
+    display: inline-block;
+    width: 100%;
+    text-align: center !important;
+}
+
+.stopped {
+    display: none;
+}

@@ -1,0 +1,48 @@
+<div class="content-wrapper">
+  <div class="container-fluid">
+    <div class="row" style="margin-bottom: 10px; margin-top: 10px;">
+      <div class="col-sm-6 col-sm-offset-3">
+        <!-- general form elements -->
+        <div class="box box-primary">
+          <div class="box-header with-border">
+            <h3 class="box-title">New actor</h3>
+          </div>
+          <!-- /.box-header -->
+          <!-- form start -->
+          <form role="form" #form="ngForm" [formGroup]="frm" (submit)="save()">
+            <div class="box-body">
+              <div [ngClass]="((frm.get('first_name').errors?.required 
+                              || frm.get('first_name').errors?.maxlength 
+                              || frm.get('first_name').errors?.minlength)
+                              && (form.submitted || frm.get('first_name').touched)) 
+                              ? 'form-group  has-error' : 'form-group'">
+                <label for="exampleInputEmail1">Nome</label>
+                <input type="text" formControlName="first_name" class="form-control" placeholder="Nome">
+                <span *ngIf="frm.get('first_name').errors?.required  && (form.submitted || frm.get('first_name').touched)" class="help-block">Campo obrigatório.</span>
+                <span *ngIf="frm.get('first_name').errors?.minlength  && (form.submitted || frm.get('first_name').touched)" class="help-block">Campo com mínimo de 2 caracteres.</span>
+                <span *ngIf="frm.get('first_name').errors?.maxlength  && (form.submitted || frm.get('first_name').touched)" class="help-block">Campo com máximo de 50 caracteres.</span>
+              </div>
+              <div [ngClass]="((frm.get('last_name').errors?.required 
+                              || frm.get('last_name').errors?.maxlength 
+                              || frm.get('last_name').errors?.minlength)
+                              && (form.submitted || frm.get('last_name').touched)) 
+                              ? 'form-group  has-error' : 'form-group'">
+                <label for="exampleInputEmail1">Sobrenome</label>
+                <input type="text" formControlName="last_name" class="form-control" placeholder="Sobrenome">
+                <span *ngIf="frm.get('last_name').errors?.minlength  && (form.submitted || frm.get('last_name').touched)" class="help-block">Campo com mínimo de 2 caracteres.</span>
+                <span *ngIf="frm.get('last_name').errors?.maxlength  && (form.submitted || frm.get('last_name').touched)" class="help-block">Campo com máximo de 100 caracteres.</span>
+                <span *ngIf="frm.get('last_name').errors?.required  && (form.submitted || frm.get('last_name').touched)" class="help-block">Campo obrigatório.</span>
+              </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+              <button type="submit" [disabled]="!frm.valid" class="btn btn-primary">Gravar</button> 
+              &nbsp;&nbsp;
+              <button routerLink="/atores" class="btn btn-danger">Cancelar</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.box -->
+      </div>
+    </div>
+  </div>
