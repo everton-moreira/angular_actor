@@ -44,8 +44,6 @@ export class MenuComponent implements OnInit {
         this.usuario = users;
         this.foto = this.ds.bypassSecurityTrustUrl(this.usuario.foto);
         this.nome = this.usuario.name;
-      }else{
-        console.log('Erro');
       }
     });
     

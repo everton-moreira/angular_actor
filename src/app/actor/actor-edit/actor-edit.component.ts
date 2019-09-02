@@ -46,10 +46,10 @@ export class ActorEditComponent implements OnInit {
           this.lista = lista; 
           const ator = this.lista[0] as Actor;
           this.setValues(ator);
-          //console.log(ator); 
         },
-        () => {
+        (erro) => {
           this.toastr.error('Falha ao pegar dados do ator.', 'Falha!');
+          console.log(erro);
         });
   }
 
@@ -71,6 +71,7 @@ export class ActorEditComponent implements OnInit {
           this.router.navigate(['/atores/editar/', this.id]);
         },
         (erro) => {
+          //console.log(erro);
           this.toastr.error('Ator não pode ser atualizado.', 'Falha!');
           this.toastr.error(erro, 'Falha!');
         }

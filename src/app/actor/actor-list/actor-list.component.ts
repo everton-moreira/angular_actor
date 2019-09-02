@@ -1,99 +1,109 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit, OnDestroy  } from '@angular/core';
 
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 import { ActorService } from '../actor.service';
 import { Actor } from '../actor.model';
 
-
 @Component({
   selector: 'app-actor-list',
   templateUrl: './actor-list.component.html',
-  styles: []
+  styles: ['./actor-list.component.css']
 })
-export class ActorListComponent implements OnInit  {
+export class ActorListComponent implements OnInit, OnDestroy  {
 
+  api = '';
   lista: Actor[];
-  qtdeRegistros: number;
-  paginas: number[];
+  totalReg: number;
+  totalPages: number;
+  currPage: number = 1;
+  previousPage: number = 0;
+  nextPage: number = 0;
 
-  lim = 15;
-  pag = 0;
-  totalPaginas = 0;
-  rangePaginas = 5;
+  regPerPage = 15;
+  pageRange = [15,25,50,100];
 
   iptFiltro = "";
+
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject();
+
 
   constructor(public actorService: ActorService
               , private toastr: ToastrService
               , private router: Router) { }
 
   ngOnInit () {
-    this.getActors(this.lim, this.pag);
+    this.dtOptions = {
+      paging: false,
+      info: false,
+      searching: false
+    };
+    this.getActors(this.regPerPage, this.currPage);
   }
 
   getActors(limite: number, pagina: number){
+    //console.log(limite);
+    
     this.lista = [];
     this.actorService.getActors(limite, pagina)
       .subscribe(
-        lista => { this.lista = lista['rows']; this.qtdeRegistros = lista['count']; this.getTotalPaginas(this.pag, this.lim); },
-        () => {
-          //console.log('Falhou');
-          this.toastr.error('Falha ao atualizar listagem de atores.', 'Falha!');
+        lista => { this.lista = lista['data'];
+                  this.api = lista['path'];
+                  this.totalReg = lista['total']; 
+                  this.totalPages = lista['last_page']; 
+                  this.currPage = lista['current_page']; 
+                  lista['prev_page_url'] != null ? this.previousPage = parseInt(lista['prev_page_url'].replace(`${lista['path']}?page=`,''), 10) : 0;
+                  lista['next_page_url'] != null ? this.nextPage = parseInt(lista['next_page_url'].replace(`${lista['path']}?page=`,''), 10) : 0;
+                  this.dtTrigger.next();
+                  //console.log(this.previousPage);
+        },
+        (erro) => {
+          if(erro.status != '401') {this.toastr.error('Falha ao atualizar listagem de atores.', 'Falha!');console.log(erro);}
+          //else this.toastr.error('Falha ao atualizar listagem de atores.', 'Falha!');
+          //console.log(erro.status);
+          //this.toastr.error('Falha ao atualizar listagem de atores.', 'Falha!');
         });
   }
 
+  
   getActorsFiltro(limite: number, pagina: number, nome: string = ''){
     this.lista = [];
     this.actorService.getFilterActors(limite, pagina, nome)
       .subscribe(
-        lista => { this.lista = lista['rows']; this.qtdeRegistros = lista['count']; this.getTotalPaginas(this.pag, this.lim); },
+        lista => { 
+                  this.lista = lista['data'];
+                  this.api = lista['path'];
+                  this.totalReg = lista['total']; 
+                  this.totalPages = lista['last_page']; 
+                  this.currPage = lista['current_page']; 
+                  lista['prev_page_url'] != null ? this.previousPage = parseInt(lista['prev_page_url'].replace(`${lista['path']}?page=`,''), 10) : 0;
+                  lista['next_page_url'] != null ? this.nextPage = parseInt(lista['next_page_url'].replace(`${lista['path']}?page=`,''), 10) : 0;
+         },
         () => {
           this.toastr.error('Falha ao atualizar listagem de atores.', 'Falha!');
         });
   }
 
   setPaginacao(limite: number = 0, pagina: number = 0){
-    this.lim = limite;
-    this.pag = pagina;
-    if(this.iptFiltro.length > 0) this.getActorsFiltro(this.lim, this.pag, this.iptFiltro);
-    else this.getActors(this.lim, this.pag);
-    this.getTotalPaginas(this.pag + 1, this.lim);
+    this.regPerPage = limite;
+    this.currPage = pagina;
+    this.previousPage = (pagina == 1 ? 0 : pagina);
+    //console.log(pagina);
+    this.dtTrigger.unsubscribe();
+    
+    if(this.iptFiltro.length > 0) this.getActorsFiltro(this.regPerPage, this.currPage, this.iptFiltro);
+    else this.getActors(this.regPerPage, this.currPage);
+    
   }
-
-  getTotalPaginas(pagina: number, registros: number, maxCount: number = 5){
-    pagina = pagina || 1;
-    this.totalPaginas = this.qtdeRegistros/registros;
-    this.totalPaginas = Math.ceil(this.totalPaginas);
-    this.paginas = [];
-    //if((this.totalPaginas - pagina) < maxCount) console.log(pagina);
-    if(((this.totalPaginas - pagina) < maxCount) && this.totalPaginas > maxCount){
-      for(var i = 0; i < maxCount; i++) 
-      { 
-        this.paginas.push(this.totalPaginas - i);
-      }
-      this.paginas = this.paginas.reverse();
-      //console.log(this.paginas);
-    }else if(this.totalPaginas < maxCount){
-      for(var i = 0; i < this.totalPaginas; i++) 
-      { 
-        this.paginas.push(pagina + i);
-      }
-      //console.log(this.paginas);
-    }else{
-      for(var i = 0; i < maxCount; i++) 
-      { 
-        this.paginas.push(pagina + i);
-      }
-      //console.log(this.paginas);
-    }
-  }
-
   reloadTable(){
     this.iptFiltro = '';
     this.lista = [];
-    this.getActors(this.lim, 0);
+    this.currPage = 1;
+    this.previousPage = 0;
+    this.getActors(this.regPerPage, this.currPage);
   }
 
   excluir(id: number, first_name: string, last_name: string) {
@@ -105,7 +115,7 @@ export class ActorListComponent implements OnInit  {
       this.actorService.excluir(id).subscribe(
         () => {
           //this.toastr.success(message, 'Salvo!');
-          this.getActors(this.lim, this.pag);
+          this.getActors(this.regPerPage, this.currPage);
           this.router.navigate(['/atores']);
         },
         (erro) => {
@@ -115,6 +125,11 @@ export class ActorListComponent implements OnInit  {
       );
     
     }
+  }
+
+  ngOnDestroy(): void {
+    this.lista = [];
+    this.dtTrigger.unsubscribe();
   }
 
 }

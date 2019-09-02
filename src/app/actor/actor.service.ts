@@ -33,7 +33,7 @@ export class ActorService {
   }
 
   getLista(limite: number, pagina: number): Observable<Actor[]> {
-    const url = `${this.api}/actor/${limite}/${pagina}`;
+    const url = `${this.api}/actor?page=${pagina}&per_page=${limite}`;
     //console.log(url);
     return this._http.get<Actor[]>(url);
   }
@@ -47,14 +47,15 @@ export class ActorService {
   }
 
   getListaFiltro(limite: number, pagina: number, nome: string = ''): Observable<Actor[]> {
-    const url = `${this.api}/actor/filtro/${limite}/${pagina}/${nome}`;
+    const url = `${this.api}/actor/filter/first_name/${nome}`;
     //console.log(url);
     return this._http.get<Actor[]>(url);
   }
 
   getActor(id: number): Observable<Actor[]> {
-    const url = `${this.api}/actor/${id}`;
-
+    const url = `${this.api}/actor/actor_id/${id}`;
+    //console.log(url);
+    
     return this._http.get<Actor[]>(url).pipe(
       tap((actor: Actor[]) => {
         this._actor.next(actor);
@@ -68,12 +69,12 @@ export class ActorService {
   }
 
   atualizar(usuario: Actor, id: number) {
-    const url = `${this.api}/actor/${id}`;
+    const url = `${this.api}/actor/actor_id/${id}`;
     return this._http.put(url, usuario);
   }
 
   excluir(id: number) {
-    const url = `${this.api}/actor/${id}`;
+    const url = `${this.api}/actor/actor_id/${id}`;
     return this._http.delete(url);
   }
 

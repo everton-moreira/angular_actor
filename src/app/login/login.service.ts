@@ -31,6 +31,7 @@ constructor(
 
   logar(usuario: Usuario): Observable<boolean> {
     const url = `${this.api}/login`;
+    //console.log(usuario);
     return this.http.post(url, usuario).pipe(
       map((resposta: TokenApi) => {
         if (!this.criarSessao(resposta.token)) {
@@ -52,8 +53,8 @@ constructor(
   criarSessao(token: string) {
     try {
       const usuario: Usuario = jwtDecode(token);
-      //console.log(usuario);
-      this.usuarioService.setUsuario(usuario);
+      //console.log(usuario.sub);
+      this.usuarioService.setUsuario(usuario['sub']);
       this.tokenService.token = token;
       this._autenticado.next(true);
       return true;

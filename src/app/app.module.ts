@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DataTablesModule } from 'angular-datatables';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,6 +35,7 @@ import { UserModule } from './user/user.module';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     LoadingModule,
+    DataTablesModule,
     UserModule,
     ToastrModule.forRoot(environment.toastConfig),
     HttpClientModule

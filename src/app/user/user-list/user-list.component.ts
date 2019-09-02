@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Usuario } from '../user.model';
 import { UsuarioService } from '../user.service';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   templateUrl: './user-list.component.html',
   styles: ['./user-list.component.css']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
 
   lista: Usuario[];
   img_ativo: string;
@@ -82,6 +82,10 @@ export class UserListComponent implements OnInit {
       );
     
     }
+  }
+
+  ngOnDestroy() {
+    this.lista = [];
   }
 
 }

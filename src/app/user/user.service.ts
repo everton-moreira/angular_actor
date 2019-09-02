@@ -40,7 +40,7 @@ export class UsuarioService {
   }
 
   getUser(id: number): Observable<Usuario[]> {
-    const url = `${this.api}/user/${id}`;
+    const url = `${this.api}/user/user_id/${id}`;
     //console.log(url);
     return this._http.get<Usuario[]>(url).pipe(
       tap((user: Usuario[]) => {
@@ -59,12 +59,12 @@ export class UsuarioService {
   }
 
   atualizar(usuario: Usuario, id: number) {
-    const url = `${this.api}/user/${id}`;
+    const url = `${this.api}/user/user_id/${id}`;
     return this._http.put(url, usuario);
   }
 
   excluir(id: number) {
-    const url = `${this.api}/user/${id}`;
+    const url = `${this.api}/user/user_id/${id}`;
     return this._http.delete(url);
   }
 

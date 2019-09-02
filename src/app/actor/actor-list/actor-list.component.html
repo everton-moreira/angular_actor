@@ -13,12 +13,18 @@
           <div class="box-header with-border">
             <h3 class="box-title"> <strong>Atores</strong> </h3>
             <div class="box-tools pull-right">
+              <div class="form-inline">
+                Registros por página: 
+                <select (change)="setPaginacao($event.target.value, 1)" class="form-control" style="cursor: pointer;padding: 2px;height: 30px;line-height: 0.5em;margin-right: 2px;border-radius: 3px;">
+                  <option *ngFor="let item of pageRange" value="{{ item }}">{{ item }}</option>
+                </select>
                 <div class="input-group input-group-sm">
                   <input type="text" [(ngModel)]="iptFiltro" (input)="iptFiltro=$event.target.value.toUpperCase()" class="form-control" placeholder="First name...">
                   <span class="input-group-btn">
-                    <button type="button" (click)="setPaginacao(lim,0)" [disabled]="iptFiltro.length < 3" class="btn btn-primary btn-flat">Filtrar</button>
+                    <button type="button" (click)="setPaginacao(regPerPage,0)" [disabled]="iptFiltro.length < 3" class="btn btn-primary btn-flat">Filtrar</button>
                   </span>
                 </div>
+              </div>
             </div>
             <!-- /.box-tools -->
           </div>
@@ -52,29 +58,31 @@
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td class="text-right" colspan="6">
+                    <td class="text-center" colspan="3">
                       <ul class="pagination">
-                        <li (click)="setPaginacao(lim,0)" *ngIf="pag >= 1">
+                        <li>
+                            Página <strong>{{ currPage }}</strong>  a {{ totalPages }} de {{ totalReg }} registros
+                        </li>
+                      </ul>
+                    </td>
+                    <td class="text-right" colspan="3">
+                      <ul class="pagination">
+                        <li (click)="setPaginacao(regPerPage, 1)" *ngIf="previousPage > 1">
                           <a aria-label="Previous">
                             <span aria-hidden="true">Primeiro</span>
                           </a>
                         </li>
-                        <li (click)="setPaginacao(lim,pag - 1)" *ngIf="pag >= 1">
+                        <li (click)="setPaginacao(regPerPage, previousPage)" *ngIf="previousPage > 0">
                           <a aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
+                            <span aria-hidden="true"><< Anterior</span>
                           </a>
                         </li>
-                        <li *ngFor="let pagina of paginas, let i = index" 
-                            [class.active]="pagina == (pag + 1)" 
-                            (click)="setPaginacao(lim, pagina - 1, rangePaginas + i)">
-                            <a>{{ pagina }}</a>
-                        </li>
-                        <li (click)="setPaginacao(lim, pag + 1)" *ngIf="(pag + 1) < totalPaginas">
+                        <li (click)="setPaginacao(regPerPage, nextPage)" *ngIf="currPage < totalPages">
                           <a aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
+                            <span aria-hidden="true">Próximo >></span>
                           </a>
                         </li>
-                        <li (click)="setPaginacao(lim, totalPaginas)" *ngIf="(pag + 1) < totalPaginas">
+                        <li (click)="setPaginacao(regPerPage, totalPages)" *ngIf="currPage < totalPages">
                           <a aria-label="Next">
                             <span aria-hidden="true">Último</span>
                           </a>
