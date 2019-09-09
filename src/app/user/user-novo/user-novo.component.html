@@ -16,13 +16,13 @@
                 <div class="box-footer">
                   <ul class="mailbox-attachments clearfix">
                     <li>
-                      <img [src]="foto" class="img-thumbnail" />
+                      <img [src]="foto" height="128" width="128" [hidden]="!foto" class="img-thumbnail" />
                       <div class="mailbox-attachment-info">
                         <div class="form-group">
                           <div class="btn btn-warning btn-file btn-block">
                             <i class="fa fa-picture-o"></i> New photo
-                            <input type="file" (change)="handleFile($event.target.files[0])" accept="image/*"
-                              #attachment>
+                            <input type="file" imageUpload (imageSelected)="selected($event)"
+                            [resizeOptions]="resizeOptions" accept="image/*" #attachment>
                           </div>
                         </div>
                       </div>
@@ -66,7 +66,7 @@
                 <label for="exampleInputEmail1">Senha</label>
                 <input type="password" formControlName="password" class="form-control" placeholder="Senha">
                 <span *ngIf="frm.get('password').errors?.minlength  && (form.submitted || frm.get('password').touched)"
-                  class="help-block">Campo com mínimo de 6 caracteres.</span>
+                  class="help-block">Campo com mínimo de 5 caracteres.</span>
                 <span *ngIf="frm.get('password').errors?.maxlength  && (form.submitted || frm.get('password').touched)"
                   class="help-block">Campo com máximo de 10 caracteres.</span>
                 <span *ngIf="frm.get('password').errors?.required  && (form.submitted || frm.get('password').touched)"

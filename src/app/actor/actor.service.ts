@@ -65,6 +65,7 @@ export class ActorService {
 
   cadastrar(usuario: Actor) {
     const url = `${this.api}/actor`;
+    console.log(url);
     return this._http.post(url, usuario);
   }
 

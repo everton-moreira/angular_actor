@@ -1,10 +1,12 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { Usuario } from '../user.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UsuarioService } from '../user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ImageResult, ResizeOptions } from 'ng2-imageupload';
+
+import { Usuario } from '../user.model';
+import { UsuarioService } from '../user.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -18,6 +20,14 @@ export class UserEditComponent implements OnInit {
   lista: Usuario[];
   foto;
   file: File;
+  resp: any;// = '';
+  image_src: string = "";
+  resizeOptions: ResizeOptions = {
+      resizeMaxHeight: 64,
+      resizeMaxWidth: 64,
+      resizeQuality: 1.5,
+      resizeType: 'image/png'
+  };
   
   @ViewChild('attachment') inputFile: ElementRef;
 
@@ -81,10 +91,14 @@ export class UserEditComponent implements OnInit {
     if(this.frm.valid && !this.frm.pending) {
       const newUser = this.frm.getRawValue() as Usuario;
       
-      //console.log(newUser);
+      //this.resp = 'FOTO: ' + newUser.foto;
+      //console.log(newUser.foto);
       
       this.userService.atualizar(newUser, this.id).subscribe(
-        () => {
+        (resp) => {
+          //console.log('RESP');
+          //console.log(resp);
+          //this.resp = resp;
           const message = `Usuário ${newUser.name} foi atualizado!`;
           this.toastr.success(message, 'Salvo!');
           this.router.navigate(['/usuario/editar/', this.id]);
@@ -100,11 +114,22 @@ export class UserEditComponent implements OnInit {
   }
 
   //////////////////////////////////////UPLOAD////////////////////////////////////////////////
+  selected(imageResult: ImageResult) {
+    this.image_src = imageResult.resized
+        && imageResult.resized.dataURL
+        || imageResult.dataURL;
+    //console.log(imageResult.file);
+    this.foto = imageResult.dataURL;
+    this.frm.get('foto').setValue(this.image_src); 
+  }
 
   handleFile(file: File) {
     this.file = file;
     const reader = new FileReader();
-    reader.onload = (event: any) => { this.foto = event.target.result; this.frm.get('foto').setValue(reader.result); };
+    reader.onload = (event: any) => { 
+                    this.foto = event.target.result; 
+                    this.frm.get('foto').setValue(reader.result); 
+                  };
     reader.readAsDataURL(file);
   }
 

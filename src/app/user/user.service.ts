@@ -60,6 +60,7 @@ export class UsuarioService {
 
   atualizar(usuario: Usuario, id: number) {
     const url = `${this.api}/user/user_id/${id}`;
+    //console.log(usuario);
     return this._http.put(url, usuario);
   }
 

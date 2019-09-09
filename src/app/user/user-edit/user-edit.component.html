@@ -16,12 +16,13 @@
                 <div class="box-footer">
                   <ul class="mailbox-attachments clearfix">
                     <li>
-                      <img [src]="foto" class="img-thumbnail" />
+                      <img [src]="foto" height="128" width="128" class="img-thumbnail" />
                       <div class="mailbox-attachment-info">
                         <div class="form-group">
                           <div class="btn btn-warning btn-file btn-block">
                             <i class="fa fa-picture-o"></i> Nova foto
-                            <input type="file" (change)="handleFile($event.target.files[0])" accept="image/*" #attachment>
+                            <input type="file" imageUpload (imageSelected)="selected($event)"
+                            [resizeOptions]="resizeOptions" accept="image/*" #attachment>
                           </div>
                         </div>
                       </div>
